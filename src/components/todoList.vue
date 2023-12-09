@@ -39,10 +39,11 @@
           </li>
         </ul>
       </div>
-      <button class="note__clear" @click="deleteNote(index)">
-        <span class="clear__line-1"> <span class="clear__line-2" /> </span>
-      </button>
+      <red-cross @flick="window(index)"></red-cross>
     </div>
+    <warning-window v-if="showWindow" @changes="deleteNote"
+      >to delete the note?</warning-window
+    >
   </main>
 </template>
 
@@ -50,15 +51,26 @@
   import { storeToRefs } from 'pinia'
   import { useNotesStore } from '../store/modalNote'
   import { useRouter } from 'vue-router'
-  import { onMounted } from 'vue'
+  import { onMounted, ref } from 'vue'
+  import WarningWindow from './ui/warningWindow.vue'
+  import RedCross from './ui/redCross.vue'
 
   const router = useRouter()
   const store = useNotesStore()
 
   const { notesList } = storeToRefs(store)
-  const deleteNote = (id: number) => {
-    store.notesList.splice(id, 1)
-    store.setLocalStorage()
+  const showWindow = ref<boolean>(false)
+  const deleteID = ref<number>(0)
+  const window = (id: number) => {
+    showWindow.value = !showWindow.value
+    deleteID.value = id
+  }
+  const deleteNote = (yes?: string) => {
+    showWindow.value = !showWindow.value
+    if (yes) {
+      store.notesList.splice(deleteID, 1)
+      store.setLocalStorage()
+    }
   }
   const noteInput = (i: number) => {
     store.notesList[i].tasks.forEach((task) => {

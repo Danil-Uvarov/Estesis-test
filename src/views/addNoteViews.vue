@@ -2,20 +2,22 @@
   <div class="note">
     <div class="note__wrapper">
       <label class="note__name-label">
-        note
+        note:
         <input
+          v-if="openNote"
           v-model="inputNote"
           class="note-input"
           type="text"
           :placeholder="placeholderNote"
         />
       </label>
-      <button class="note__add-button" @click="addNote">add note</button>
+      <button v-if="openNote" class="note__add-button" @click="addNote">
+        post a note
+      </button>
       <ul class="note__name-list">
-        <li v-if="note.name" class="note__name-link">
-          заметка: {{ note.name }}
-        </li>
+        <li v-if="note.name" class="note__name-link">note: {{ note.name }}</li>
       </ul>
+      <red-cross v-if="!openNote" @flick="eraseNote"></red-cross>
     </div>
     <div class="task__wrapper">
       <label class="task__name-label">
@@ -34,17 +36,17 @@
           :key="index"
           class="task__name-link"
         >
-          задача - {{ task.nameTask }}
+          task - {{ task.nameTask }}
         </li>
       </ol>
     </div>
     <div class="buttons__wrapper">
       <RouterLink to="/">
         <button class="button__add" @click="pushNoteStore(note)">
-          Добавить заметку
+          add note
         </button>
       </RouterLink>
-      <button class="button__clear" @click="clear">очистить</button>
+      <button class="button__clear" @click="clear">clean the mold</button>
     </div>
   </div>
 </template>
@@ -53,10 +55,12 @@
   import { INote } from '../models/entyties/INote'
   import { ref } from 'vue'
   import { useNotesStore } from '../store/modalNote'
+  import RedCross from '../components/ui/redCross.vue'
 
   const notesStore = useNotesStore()
-  const inputNote = ref('')
-  const inputTask = ref('')
+  const inputNote = ref<string>('')
+  const inputTask = ref<string>('')
+  const openNote = ref<boolean>(true)
   const note = ref<INote>({
     name: '',
     checked: false,
@@ -65,14 +69,18 @@
 
   const placeholderNote = ref('enter a note')
 
+  const eraseNote = () => {
+    note.value.name = ''
+    inputNote.value = ''
+    openNote.value = !openNote.value
+  }
   function addNote() {
-    if (note.value.name.length === 0) {
-      note.value.name = inputNote.value
-      inputNote.value = ''
-    } else {
-      inputNote.value = ''
-      placeholderNote.value = '1 задача уже существует '
+    if (!inputNote.value) {
+      return
     }
+    note.value.name = inputNote.value
+    inputNote.value = ''
+    openNote.value = !openNote.value
   }
 
   const addTask = () => {
@@ -86,6 +94,9 @@
   }
 
   const pushNoteStore = (note: INote) => {
+    if (!note.name) {
+      return
+    }
     notesStore.notesList.push(note)
     notesStore.setLocalStorage()
   }
@@ -100,6 +111,7 @@
   }
 
   .note__wrapper {
+    position: relative;
   }
 
   .note__name-label {

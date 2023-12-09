@@ -6,14 +6,10 @@
   </div>
 </template>
 
-<script setup lang='ts'>
-
-import AddNoteButton from '../components/addNoteButton.vue'
-import AppBar from '../components/appBar.vue'
-import TodoList from '../components/todoList.vue'
-
+<script setup lang="ts">
+  import AddNoteButton from '../components/addNoteButton.vue'
+  import AppBar from '../components/appBar.vue'
+  import TodoList from '../components/todoList.vue'
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

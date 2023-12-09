@@ -1,20 +1,21 @@
 <template>
   <div class="modal__task-body">
-    <button class="modal__close" @click="$emit('close')">
-      <span class="close__line-1"> <span class="close__line-2" /> </span>
-    </button>
+    <red-cross @flick="$emit('close')"></red-cross>
     <div class="modal__task-name">{{ name }}</div>
     <input v-model="name" type="text" class="task__modify-input" />
     <button class="modal__button-changes" @click="show = !show">
       make changes
     </button>
-    <warning-window v-if="show" @changes="getChanges"></warning-window>
+    <warning-window v-if="show" @changes="getChanges"
+      >Make changes to the task?</warning-window
+    >
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref } from 'vue'
   import WarningWindow from './ui/warningWindow.vue'
+  import RedCross from './ui/redCross.vue'
 
   interface props {
     nameTask: string
@@ -26,12 +27,12 @@
   const name = ref<string>(props.nameTask)
   const show = ref<boolean>(false)
 
-  const getChanges = (yes: string) => {
-    show.value = !show.value
-    if (yes) {
+  const getChanges = (result: string) => {
+    if (result) {
       emit('close', name.value)
+    } else {
+      emit('close')
     }
-    emit('close')
   }
 </script>
 <style scoped>

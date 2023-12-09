@@ -4,7 +4,7 @@
       <h2 class="note__title" :class="{ open: isOpen }">
         {{ note.name }}
       </h2>
-      <button class="note__modify" @click="modifyNote" @keydown="modifyNote">
+      <button class="note__modify" @click="isOpen = !isOpen">
         modify note
       </button>
     </div>
@@ -15,17 +15,20 @@
       type="text"
     />
     <task-modify :tasks="note.tasks"></task-modify>
-    <modal-task-add v-if="isActive" @close="newTask"></modal-task-add>
+
     <div class="note__buttons-wrapper">
       <button class="add__task-button" @click="isActive = !isActive">
         add task
       </button>
-
-      <router-link to="/" class="note__changes" @click="addChanges">
-        add changes</router-link
-      >
+      <modal-task-add v-if="isActive" @close="newTask"></modal-task-add>
+      <button class="note__changes" @click="warning = !warning">
+        add changes
+      </button>
     </div>
   </div>
+  <warning-window v-if="warning" @changes="addChanges"
+    >Do you really want to make changes to the memo?</warning-window
+  >
 </template>
 <script setup lang="ts">
   import { useNotesStore } from '../store/modalNote'
@@ -35,6 +38,8 @@
   import { ref } from 'vue'
   import TaskModify from '../components/taskModify.vue'
   import ModalTaskAdd from '../components/modalTaskAdd.vue'
+  import WarningWindow from '../components/ui/warningWindow.vue'
+  import router from '../router/router.ts'
 
   const store = useNotesStore()
   const route = useRoute()
@@ -42,19 +47,19 @@
   const routeNumber = Number(route.params.id)
   const isActive = ref<boolean>(false)
   const isOpen = ref<boolean>(false)
+  const warning = ref<boolean>(false)
 
   const note: INote = notesList.value[routeNumber]
-  const modifyNote = () => {
-    isOpen.value = !isOpen.value
-    if (note.name) {
-      store.setLocalStorage()
-    }
-  }
 
-  const addChanges = () => {
-    const result = note.tasks.find((item) => !item.checked)
-    store.notesList[routeNumber].checked = !result
-    store.setLocalStorage()
+  const addChanges = (yes: string) => {
+    if (yes) {
+      const result = note.tasks.find((item) => !item.checked)
+      store.notesList[routeNumber].checked = !result
+      store.setLocalStorage()
+      router.push('/')
+    } else {
+      router.push('/')
+    }
   }
   const newTask = (task?: string) => {
     isActive.value = !isActive.value

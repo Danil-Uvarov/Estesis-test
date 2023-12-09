@@ -9,23 +9,35 @@
           type="text"
           name="name"
         />
-        <button class="input__button" @click="$emit('close', newName)">
+        <button class="input__button" @click="openWindow = !openWindow">
           add
         </button>
       </div>
     </div>
-    <button class="note__clear" @click="$emit('close')">
-      <span class="clear__line-1"> <span class="clear__line-2" /> </span>
-    </button>
+    <RedCross @flick="close"></RedCross>
+    <warning-window v-if="openWindow" @changes="close"
+      >Внести новую задачу в список?</warning-window
+    >
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref } from 'vue'
+  import WarningWindow from './ui/warningWindow.vue'
+  import RedCross from './ui/redCross.vue'
 
-  defineEmits<{ close: [newName?: string] }>()
+  const emit = defineEmits<{ close: [newName?: string] }>()
 
   const newName = ref<string>('')
+  const openWindow = ref<boolean>(false)
+  const close = (result: string) => {
+    openWindow.value = !openWindow.value
+    if (result) {
+      emit('close', newName.value)
+    } else {
+      emit('close')
+    }
+  }
 </script>
 <style scoped>
   .add__task-frame {

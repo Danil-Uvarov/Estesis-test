@@ -1,6 +1,6 @@
 <template>
   <section class="modal hidden">
-    <h1 class="modal__title">Уверены что хотете внести изменения?</h1>
+    <h1 class="modal__title"><slot> </slot></h1>
     <div class="modal__buttons-wrapper">
       <button class="button-true" @click="$emit('changes', 'yes')">да</button>
       <button class="button__false" @click="$emit('changes')">нет</button>
@@ -27,6 +27,7 @@
     transform: translateX(-50%);
     background-color: #ff0000;
     border-radius: 15px;
+    z-index: 100;
   }
   .modal__title {
     font-weight: 700;

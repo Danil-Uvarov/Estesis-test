@@ -12,6 +12,9 @@
       modify name task
     </button>
   </div>
+  <warning-window v-if="openWindow" @changes="deleteTask"
+    >to delete the task?
+  </warning-window>
   <modal-task-refactor v-if="open" :name-task="modifyTask.name" @close="close">
   </modal-task-refactor>
 </template>
@@ -23,6 +26,7 @@
   import { ITasks } from '../models/entyties/ITasks'
   import { ref } from 'vue'
   import ModalTaskRefactor from './modalTaskRefactor.vue'
+  import WarningWindow from './ui/warningWindow.vue'
 
   const props = defineProps<{ tasks: ITasks[] }>()
   const store = useNotesStore()
@@ -30,11 +34,23 @@
   const { notesList } = storeToRefs(store)
   const routeNumber = Number(route.params.id)
   const open = ref<boolean>(false)
+  const openWindow = ref<boolean>(false)
   const modifyTask = ref<{ name: string; index: number }>({
     name: '',
     index: 0,
   })
-
+  const taskIdDelete = ref<number>(0)
+  const window = (index: number) => {
+    openWindow.value = !openWindow.value
+    taskIdDelete.value = index
+  }
+  const deleteTask = (result: string) => {
+    openWindow.value = !openWindow.value
+    if (result) {
+      notesList.value[routeNumber].tasks.splice(taskIdDelete, 1)
+    }
+    s
+  }
   const close = (newName?: string) => {
     open.value = !open.value
     if (newName) {
@@ -50,11 +66,11 @@
   const tasksAccomplished = (i: number) => {
     const result = props.tasks.find((item) => !item.checked)
     store.notesList[i].checked = !result
-    store.setLocalStorage()
   }
 </script>
 <style scoped>
   .task {
+    position: relative;
     margin: 20px auto;
     width: 100%;
     max-width: 300px;
@@ -79,32 +95,5 @@
     border-radius: 10px;
     font-size: 12px;
     font-weight: 600;
-  }
-  .note__clear {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    background-color: red;
-  }
-
-  .clear__line-1 {
-    display: inline-block;
-    margin-bottom: 5px;
-    width: 2px;
-    height: 8px;
-    transform: rotate(40deg);
-    background-color: #ffffff;
-  }
-
-  .clear__line-2 {
-    display: inline-block;
-    margin-bottom: 5px;
-    width: 2px;
-    height: 8px;
-    transform: rotate(98deg);
-    background-color: #ffffff;
   }
 </style>
