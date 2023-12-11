@@ -16,7 +16,7 @@
     </div>
     <RedCross @flick="close"></RedCross>
     <warning-window v-if="openWindow" @changes="close"
-      >Внести новую задачу в список?</warning-window
+      >Put a new task on the list?</warning-window
     >
   </div>
 </template>
@@ -30,7 +30,7 @@
 
   const newName = ref<string>('')
   const openWindow = ref<boolean>(false)
-  const close = (result: string) => {
+  const close = (result?: boolean) => {
     openWindow.value = !openWindow.value
     if (result) {
       emit('close', newName.value)
@@ -78,36 +78,10 @@
   .input__button {
     margin-top: 40px;
     padding: 10px;
-    background-color: #008000;
+    background: #9395d3;
+    color: #ffffff;
     font-weight: 700;
     font-size: 32px;
     border-radius: 10px;
-  }
-  .note__clear {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    background-color: red;
-  }
-
-  .clear__line-1 {
-    display: inline-block;
-    margin-bottom: 5px;
-    width: 2px;
-    height: 8px;
-    transform: rotate(40deg);
-    background-color: #ffffff;
-  }
-
-  .clear__line-2 {
-    display: inline-block;
-    margin-bottom: 5px;
-    width: 2px;
-    height: 8px;
-    transform: rotate(98deg);
-    background-color: #ffffff;
   }
 </style>

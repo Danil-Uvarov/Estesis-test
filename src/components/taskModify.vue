@@ -1,6 +1,8 @@
 <template>
   <div v-for="(task, index) in tasks" :key="index" class="task">
-    <div class="task__name">{{ task.nameTask }}</div>
+    <button class="task__modify" @click="openModal(index)">
+      modify name task
+    </button>
     <input
       v-model="task.checked"
       type="checkbox"
@@ -8,9 +10,7 @@
       @update:model-value="tasksAccomplished(index)"
     />
 
-    <button class="task__modify" @click="openModal(index)">
-      modify name task
-    </button>
+    <div class="task__name">{{ task.nameTask }}</div>
   </div>
   <warning-window v-if="openWindow" @changes="deleteTask"
     >to delete the task?
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useNotesStore } from '../store/modalNote'
+  import { useNotesStore } from '../store'
   import { storeToRefs } from 'pinia'
   import { useRoute } from 'vue-router'
   import { ITasks } from '../models/entyties/ITasks'
@@ -40,16 +40,12 @@
     index: 0,
   })
   const taskIdDelete = ref<number>(0)
-  const window = (index: number) => {
-    openWindow.value = !openWindow.value
-    taskIdDelete.value = index
-  }
-  const deleteTask = (result: string) => {
+
+  const deleteTask = (result?: boolean) => {
     openWindow.value = !openWindow.value
     if (result) {
       notesList.value[routeNumber].tasks.splice(taskIdDelete, 1)
     }
-    s
   }
   const close = (newName?: string) => {
     open.value = !open.value
@@ -71,25 +67,31 @@
 <style scoped>
   .task {
     position: relative;
-    margin: 20px auto;
+    margin: 20px;
     width: 100%;
-    max-width: 300px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 20% 20% 60%;
   }
 
   .task__name {
     font-weight: 500;
     font-size: 24px;
+    margin: auto 0;
+    text-align: center;
   }
 
   .task__checkbox {
+    cursor: pointer;
     width: 40px;
     height: 40px;
+    margin: auto auto;
   }
 
   .task__modify {
+    cursor: pointer;
+    max-height: 50px;
+    max-width: 60px;
+    margin: auto 0;
     padding: 2px;
     background: gold;
     border-radius: 10px;

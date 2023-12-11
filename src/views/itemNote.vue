@@ -1,5 +1,11 @@
 <template>
   <div class="body">
+    <router-link to="/">
+      <img src="/public/image/arrow.svg" class="note__arrow" alt="#"
+    /></router-link>
+    <button @click="undo">undo</button>
+    <button @click="redo">redo</button>
+
     <div class="note__title-wrapper">
       <h2 class="note__title" :class="{ open: isOpen }">
         {{ note.name }}
@@ -17,30 +23,31 @@
     <task-modify :tasks="note.tasks"></task-modify>
 
     <div class="note__buttons-wrapper">
+      <button class="note__changes" @click="warning = !warning">
+        add changes
+      </button>
       <button class="add__task-button" @click="isActive = !isActive">
         add task
       </button>
       <modal-task-add v-if="isActive" @close="newTask"></modal-task-add>
-      <button class="note__changes" @click="warning = !warning">
-        add changes
-      </button>
     </div>
   </div>
   <warning-window v-if="warning" @changes="addChanges"
-    >Do you really want to make changes to the memo?</warning-window
-  >
+    >Do you really want to make changes to the memo?
+  </warning-window>
 </template>
 <script setup lang="ts">
-  import { useNotesStore } from '../store/modalNote'
-  import { storeToRefs } from 'pinia'
-  import { INote } from '../models/entyties/INote.ts'
-  import { useRoute } from 'vue-router'
-  import { ref } from 'vue'
   import TaskModify from '../components/taskModify.vue'
   import ModalTaskAdd from '../components/modalTaskAdd.vue'
   import WarningWindow from '../components/ui/warningWindow.vue'
-  import router from '../router/router.ts'
+  import { useRouter } from 'vue-router'
+  import { useNotesStore } from '../store'
+  import { storeToRefs } from 'pinia'
+  import { useRoute } from 'vue-router'
+  import { ref, computed } from 'vue'
+  import { useRefHistory } from '@vueuse/core'
 
+  const router = useRouter()
   const store = useNotesStore()
   const route = useRoute()
   const { notesList } = storeToRefs(store)
@@ -49,11 +56,22 @@
   const isOpen = ref<boolean>(false)
   const warning = ref<boolean>(false)
 
-  const note: INote = notesList.value[routeNumber]
-
-  const addChanges = (yes: string) => {
-    if (yes) {
-      const result = note.tasks.find((item) => !item.checked)
+  const note = computed({
+    get() {
+      return notesList.value[routeNumber]
+    },
+    set(newValue) {
+      notesList.value[routeNumber] = newValue
+    },
+  })
+  const { undo, redo } = useRefHistory(notesList, {
+    deep: true,
+  })
+  const addChanges = (result?: boolean) => {
+    if (result) {
+      const result = notesList.value[routeNumber].tasks.find(
+        (item) => !item.checked,
+      )
       store.notesList[routeNumber].checked = !result
       store.setLocalStorage()
       router.push('/')
@@ -80,12 +98,23 @@
     gap: 40px;
   }
 
+  .note__arrow {
+    max-width: 40px;
+    max-height: 20px;
+  }
+
   .note__title-wrapper {
-    position: relative;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .note__title {
+    text-align: center;
+    font-weight: 600;
+    max-width: 400px;
+    word-break: break-word;
   }
 
   .note__title-input {
@@ -101,18 +130,15 @@
     padding-top: 50px;
     display: flex;
     margin: 0 auto;
+    gap: 40px;
     width: 100%;
-    max-width: 300px;
     justify-content: space-between;
   }
 
   .note__modify {
-    position: absolute;
-    padding: 2px;
-    margin: 0 auto;
-    bottom: -35px;
-    left: 50%;
-    transform: translateX(-50%);
+    cursor: pointer;
+    padding: 5px;
+    margin: 10px auto 0 auto;
     background: gold;
     border-radius: 10px;
     font-size: 12px;
@@ -120,21 +146,25 @@
   }
 
   .add__task-button {
+    cursor: pointer;
     margin: 0 auto;
-    background-color: chocolate;
+    background: #9395d3;
+    color: #ffffff;
     border-radius: 10px;
     padding: 8px 12px;
-  }
-
-  .note__changes {
-    margin: 0 auto;
-    background: green;
-    border-radius: 10px;
     font-size: 24px;
     font-weight: 500;
   }
 
-  .open {
+  .note__changes {
+    cursor: pointer;
+    margin: 0 auto;
+    background: #9395d3;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 24px;
+    font-weight: 500;
   }
 
   .isOpen {

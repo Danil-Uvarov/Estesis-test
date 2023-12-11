@@ -2,14 +2,16 @@
   <section class="modal hidden">
     <h1 class="modal__title"><slot> </slot></h1>
     <div class="modal__buttons-wrapper">
-      <button class="button-true" @click="$emit('changes', 'yes')">да</button>
-      <button class="button__false" @click="$emit('changes')">нет</button>
+      <button class="button-true" @click="$emit('changes', true)">yes</button>
+      <button class="button__false" @click="$emit('changes')">no</button>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-  defineEmits(['changes'])
+  defineEmits<{
+    changes: [result?: boolean]
+  }>()
 </script>
 
 <style scoped>
@@ -30,6 +32,7 @@
     z-index: 100;
   }
   .modal__title {
+    text-align: center;
     font-weight: 700;
     font-size: 32px;
   }

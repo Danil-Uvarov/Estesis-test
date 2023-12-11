@@ -25,7 +25,7 @@
 </template>
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { useNotesStore } from '../store/modalNote'
+  import { useNotesStore } from '../store'
   import { storeToRefs } from 'pinia'
   import { ITasks } from '../models/entyties/ITasks.ts'
   import { useRoute } from 'vue-router'

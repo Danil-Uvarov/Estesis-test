@@ -27,7 +27,7 @@
   const name = ref<string>(props.nameTask)
   const show = ref<boolean>(false)
 
-  const getChanges = (result: string) => {
+  const getChanges = (result?: boolean) => {
     if (result) {
       emit('close', name.value)
     } else {
@@ -68,38 +68,10 @@
     transform: translateX(-50%);
     top: 150px;
     padding: 10px;
-    background-color: #008000;
+    background: #9395d3;
+    color: #ffffff;
     font-weight: 700;
     font-size: 32px;
     border-radius: 10px;
-  }
-  .modal__close {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    right: -3px;
-    top: -3px;
-    background-color: red;
-  }
-
-  .close__line-1 {
-    display: inline-block;
-    margin-bottom: 5px;
-    width: 2px;
-    height: 8px;
-    transform: rotate(40deg);
-    background-color: #ffffff;
-  }
-  .close__line-2 {
-    display: inline-block;
-    margin-bottom: 5px;
-    width: 2px;
-    height: 8px;
-    transform: rotate(98deg);
-    background-color: #ffffff;
-  }
-  .open {
-    display: none;
   }
 </style>

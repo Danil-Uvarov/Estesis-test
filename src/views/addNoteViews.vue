@@ -1,52 +1,59 @@
 <template>
   <div class="note">
-    <div class="note__wrapper">
-      <label class="note__name-label">
-        note:
-        <input
-          v-if="openNote"
-          v-model="inputNote"
-          class="note-input"
-          type="text"
-          :placeholder="placeholderNote"
-        />
-      </label>
-      <button v-if="openNote" class="note__add-button" @click="addNote">
-        post a note
-      </button>
-      <ul class="note__name-list">
-        <li v-if="note.name" class="note__name-link">note: {{ note.name }}</li>
-      </ul>
-      <red-cross v-if="!openNote" @flick="eraseNote"></red-cross>
-    </div>
-    <div class="task__wrapper">
-      <label class="task__name-label">
-        task
-        <input
-          v-model="inputTask"
-          class="task-input"
-          type="text"
-          placeholder="enter a task"
-        />
-      </label>
-      <button class="task__add-button" @click="addTask">add task</button>
-      <ol class="task__name-list">
-        <li
-          v-for="(task, index) in note.tasks"
-          :key="index"
-          class="task__name-link"
-        >
-          task - {{ task.nameTask }}
-        </li>
-      </ol>
-    </div>
-    <div class="buttons__wrapper">
-      <RouterLink to="/">
-        <button class="button__add" @click="pushNoteStore(note)">
-          add note
+    <router-link to="/">
+      <img src="/public/image/arrow.svg" class="note__arrow" alt="#"
+    /></router-link>
+    <div class="note__body">
+      <div class="note__wrapper">
+        <label v-if="openNote" class="note__name-label">
+          note:
+          <input
+            v-if="openNote"
+            v-model="inputNote"
+            class="note-input"
+            type="text"
+            :placeholder="placeholderNote"
+          />
+        </label>
+        <button v-if="openNote" class="note__add-button" @click="addNote">
+          post a note
         </button>
-      </RouterLink>
-      <button class="button__clear" @click="clear">clean the mold</button>
+        <ul class="note__name-list">
+          <li v-if="note.name" class="note__name-link">
+            note: {{ note.name }}
+          </li>
+        </ul>
+        <red-cross v-if="!openNote" @flick="eraseNote"></red-cross>
+      </div>
+      <div class="task__wrapper">
+        <label class="task__name-label">
+          task
+          <input
+            v-model="inputTask"
+            class="task-input"
+            type="text"
+            placeholder="enter a task"
+          />
+        </label>
+        <button class="task__add-button" @click="addTask">add task</button>
+        <ol class="task__name-list">
+          <li
+            v-for="(task, index) in note.tasks"
+            :key="index"
+            class="task__name-link"
+          >
+            task - {{ task.nameTask }}
+          </li>
+        </ol>
+      </div>
+      <div class="buttons__wrapper">
+        <RouterLink to="/">
+          <button class="button__add" @click="pushNoteStore(note)">
+            add note
+          </button>
+        </RouterLink>
+        <button class="button__clear" @click="clear">clean the mold</button>
+      </div>
     </div>
   </div>
 </template>
@@ -54,7 +61,7 @@
 <script setup lang="ts">
   import { INote } from '../models/entyties/INote'
   import { ref } from 'vue'
-  import { useNotesStore } from '../store/modalNote'
+  import { useNotesStore } from '../store'
   import RedCross from '../components/ui/redCross.vue'
 
   const notesStore = useNotesStore()
@@ -104,6 +111,12 @@
 
 <style scoped>
   .note {
+  }
+  .note__arrow {
+    max-width: 40px;
+    max-height: 20px;
+  }
+  .note__body {
     display: flex;
     flex-direction: column;
     gap: 30px;
