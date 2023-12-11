@@ -1,11 +1,14 @@
 <template>
   <div class="body">
-    <router-link to="/">
-      <img src="/public/image/arrow.svg" class="note__arrow" alt="#"
-    /></router-link>
-    <button @click="undo">undo</button>
-    <button @click="redo">redo</button>
-
+    <div class="note__header">
+      <router-link to="/">
+        <img src="/public/image/arrow.svg" class="note__arrow" alt="#"
+      /></router-link>
+      <div class="note__buttons-history">
+        <button class="button__history" @click="undo">undo</button>
+        <button class="button__history" @click="redo">redo</button>
+      </div>
+    </div>
     <div class="note__title-wrapper">
       <h2 class="note__title" :class="{ open: isOpen }">
         {{ note.name }}
@@ -20,7 +23,7 @@
       :class="{ isOpen: isOpen }"
       type="text"
     />
-    <task-modify :tasks="note.tasks"></task-modify>
+    <ModifyTask :tasks="note.tasks"></ModifyTask>
 
     <div class="note__buttons-wrapper">
       <button class="note__changes" @click="warning = !warning">
@@ -29,17 +32,17 @@
       <button class="add__task-button" @click="isActive = !isActive">
         add task
       </button>
-      <modal-task-add v-if="isActive" @close="newTask"></modal-task-add>
+      <AddTaskModal v-if="isActive" @close="newTask"></AddTaskModal>
     </div>
   </div>
-  <warning-window v-if="warning" @changes="addChanges"
+  <WindowWarning v-if="warning" @changes="addChanges"
     >Do you really want to make changes to the memo?
-  </warning-window>
+  </WindowWarning>
 </template>
 <script setup lang="ts">
-  import TaskModify from '../components/taskModify.vue'
-  import ModalTaskAdd from '../components/modalTaskAdd.vue'
-  import WarningWindow from '../components/ui/warningWindow.vue'
+  import ModifyTask from '../components/ModifyTask.vue'
+  import AddTaskModal from '../components/AddTaskModal.vue'
+  import WindowWarning from '../components/ui/WindowWarning.vue'
   import { useRouter } from 'vue-router'
   import { useNotesStore } from '../store'
   import { storeToRefs } from 'pinia'
@@ -97,10 +100,27 @@
     flex-direction: column;
     gap: 40px;
   }
-
+  .note__header {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
   .note__arrow {
     max-width: 40px;
     max-height: 20px;
+  }
+  .note__buttons-history {
+    display: flex;
+    gap: 20px;
+  }
+
+  .button__history {
+    padding: 8px;
+    background: #9395d3;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 600;
   }
 
   .note__title-wrapper {

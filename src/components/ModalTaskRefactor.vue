@@ -6,16 +6,16 @@
     <button class="modal__button-changes" @click="show = !show">
       make changes
     </button>
-    <warning-window v-if="show" @changes="getChanges"
-      >Make changes to the task?</warning-window
+    <WindowWarning v-if="show" @changes="getChanges"
+      >Make changes to the task?</WindowWarning
     >
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import WarningWindow from './ui/warningWindow.vue'
-  import RedCross from './ui/redCross.vue'
+  import WindowWarning from './ui//WindowWarning.vue'
+  import RedCross from './ui/RedCross.vue'
 
   interface props {
     nameTask: string

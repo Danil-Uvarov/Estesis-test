@@ -62,7 +62,7 @@
   import { INote } from '../models/entyties/INote'
   import { ref } from 'vue'
   import { useNotesStore } from '../store'
-  import RedCross from '../components/ui/redCross.vue'
+  import RedCross from '../components/ui/RedCross.vue'
 
   const notesStore = useNotesStore()
   const inputNote = ref<string>('')

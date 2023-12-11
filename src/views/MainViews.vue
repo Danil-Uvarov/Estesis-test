@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="ts">
-  import AddNoteButton from '../components/addNoteButton.vue'
-  import AppBar from '../components/appBar.vue'
-  import TodoList from '../components/todoList.vue'
+  import AddNoteButton from '../components/AddNoteButton.vue'
+  import AppBar from '../components/AppBar.vue'
+  import TodoList from '../components/TodoList.vue'
 </script>
 
 <style scoped></style>

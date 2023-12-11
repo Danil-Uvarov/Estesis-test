@@ -12,9 +12,9 @@
 
     <div class="task__name">{{ task.nameTask }}</div>
   </div>
-  <warning-window v-if="openWindow" @changes="deleteTask"
+  <WindowWarning v-if="openWindow" @changes="deleteTask"
     >to delete the task?
-  </warning-window>
+  </WindowWarning>
   <modal-task-refactor v-if="open" :name-task="modifyTask.name" @close="close">
   </modal-task-refactor>
 </template>
@@ -25,8 +25,9 @@
   import { useRoute } from 'vue-router'
   import { ITasks } from '../models/entyties/ITasks'
   import { ref } from 'vue'
-  import ModalTaskRefactor from './modalTaskRefactor.vue'
-  import WarningWindow from './ui/warningWindow.vue'
+  import ModalTaskRefactor from './ModalTaskRefactor.vue'
+  import WindowWarning from './ui/WindowWarning.vue'
+  import RedCross from './ui/RedCross.vue'
 
   const props = defineProps<{ tasks: ITasks[] }>()
   const store = useNotesStore()

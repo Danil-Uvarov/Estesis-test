@@ -6,9 +6,11 @@
         :key="indexTask"
         class="task__link"
       >
-        <h3 class="task__link-title" :class="{ active: openId == indexTask }">
-          {{ task.nameTask }}
-        </h3>
+        <h3
+          class="task__link-title"
+          :class="{ active: openId == indexTask }"
+        ></h3>
+        <red-cross></red-cross>
         <input
           v-model="task.nameTask"
           class="task__change-input"
@@ -29,6 +31,7 @@
   import { storeToRefs } from 'pinia'
   import { ITasks } from '../models/entyties/ITasks.ts'
   import { useRoute } from 'vue-router'
+  import RedCross from './ui/RedCross.vue'
 
   const route = useRoute()
   const store = useNotesStore()

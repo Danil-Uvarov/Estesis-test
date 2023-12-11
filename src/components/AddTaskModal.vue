@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import WarningWindow from './ui/warningWindow.vue'
-  import RedCross from './ui/redCross.vue'
+  import WarningWindow from './ui/WindowWarning.vue'
+  import RedCross from './ui/RedCross.vue'
 
   const emit = defineEmits<{ close: [newName?: string] }>()
 

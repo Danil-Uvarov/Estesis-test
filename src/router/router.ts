@@ -6,7 +6,7 @@ export default createRouter({
     {
       path: '/',
       name: 'main',
-      component: () => import('../views/mainViews.vue'),
+      component: () => import('../views/MainViews.vue'),
       meta: {
         layout: 'defaultLayout',
       },
@@ -14,7 +14,7 @@ export default createRouter({
     {
       path: '/addNote',
       name: 'addNote',
-      component: () => import('../views/addNoteViews.vue'),
+      component: () => import('../views/AddNoteViews.vue'),
       meta: {
         layout: 'defaultLayout',
       },
@@ -22,7 +22,7 @@ export default createRouter({
     {
       path: '/item/:id',
       name: 'item',
-      component: () => import('../views/itemNote.vue'),
+      component: () => import('../views/ItemNote.vue'),
       meta: {
         layout: 'defaultLayout',
       },

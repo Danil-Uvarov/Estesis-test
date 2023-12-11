@@ -15,9 +15,12 @@
         <span class="note__checkbox-custom" />
       </label>
       <div class="note__name-wrapper">
-        <button class="note__name" @click="router.push(`/item/${index}`)">
+        <router-link
+          class="note__name"
+          :to="{ name: 'item', params: { id: index } }"
+        >
           {{ note.name }}
-        </button>
+        </router-link>
       </div>
       <div class="note__tasks-wrapper">
         <ul
@@ -42,9 +45,9 @@
       </div>
       <red-cross @flick="window(index)"></red-cross>
     </div>
-    <warning-window v-if="showWindow" @changes="deleteNote"
-      >To delete the note?</warning-window
-    >
+    <WindowWarning v-if="showWindow" @changes="deleteNote"
+      >To delete the note?
+    </WindowWarning>
   </main>
 </template>
 
@@ -53,8 +56,8 @@
   import { useNotesStore } from '../store'
   import { useRouter } from 'vue-router'
   import { onMounted, ref } from 'vue'
-  import WarningWindow from './ui/warningWindow.vue'
-  import RedCross from './ui/redCross.vue'
+  import WindowWarning from './ui/WindowWarning.vue'
+  import RedCross from './ui/RedCross.vue'
 
   const router = useRouter()
   const store = useNotesStore()
@@ -148,19 +151,21 @@
   .note__checkbox:checked + .note__checkbox-custom:before {
     transform: scale(1);
   }
+
   .note__name-wrapper {
     height: 100%;
   }
+
   .note__name {
-    word-break: break-word;
+    color: #000000;
     font-weight: 700;
     font-size: 18px;
     height: 100%;
-    max-width: 100px;
-    background: #ffffff;
-    border: none;
     cursor: pointer;
+    text-decoration: none;
+    word-break: break-word;
   }
+
   .note__tasks-wrapper {
     display: flex;
     flex-direction: column;
