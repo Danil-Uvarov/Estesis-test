@@ -52,7 +52,7 @@
             add note
           </button>
         </RouterLink>
-        <button class="button__clear" @click="clear">clean the mold</button>
+        <button class="button__clear" @click="clear">reset</button>
       </div>
     </div>
   </div>

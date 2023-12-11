@@ -110,9 +110,9 @@
     border: 2px solid black;
     padding: 12px 8px;
     background-color: #ffffff;
-    display: flex;
+    display: grid;
+    grid-template-columns: 20% 20% 60%;
     align-items: center;
-    justify-content: space-around;
   }
 
   .note__label-checkbox {
@@ -154,9 +154,13 @@
 
   .note__name-wrapper {
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .note__name {
+    text-align: center;
     color: #000000;
     font-weight: 700;
     font-size: 18px;
@@ -181,15 +185,16 @@
     list-style: none;
     font-size: 24px;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     gap: 8px;
     word-break: break-word;
   }
 
   .task__label-checkbox {
     display: flex;
-    align-items: center;
-    gap: 16px;
+    max-width: 200px;
+    width: 100%;
+    justify-content: space-between;
     background-color: #ffffff;
   }
 

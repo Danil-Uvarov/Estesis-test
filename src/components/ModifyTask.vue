@@ -10,10 +10,16 @@
       @update:model-value="tasksAccomplished(index)"
     />
 
-    <div class="task__name">{{ task.nameTask }}</div>
+    <div class="task__name">
+      {{ task.nameTask }}
+      <red-cross
+        style="position: absolute; top: 0; right: 0"
+        @flick="deleteTask"
+      ></red-cross>
+    </div>
   </div>
   <WindowWarning v-if="openWindow" @changes="deleteTask"
-    >to delete the task?
+    >To delete the task?
   </WindowWarning>
   <modal-task-refactor v-if="open" :name-task="modifyTask.name" @close="close">
   </modal-task-refactor>
@@ -67,14 +73,16 @@
 </script>
 <style scoped>
   .task {
+    padding: 0 20px;
     position: relative;
     margin: 20px;
     width: 100%;
     display: grid;
-    grid-template-columns: 20% 20% 60%;
+    grid-template-columns: 20% 20% 50%;
   }
 
   .task__name {
+    position: relative;
     font-weight: 500;
     font-size: 24px;
     margin: auto 0;
