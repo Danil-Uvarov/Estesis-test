@@ -6,17 +6,26 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { computed } from 'vue'
+  import { computed, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import layoutDefault from './layouts/layouDefault.vue'
+  import { useNotesStore } from './store'
 
   const route = useRoute()
+  const store = useNotesStore()
 
   const layout = computed(() => {
     if (route.meta.layout === 'defaultLayout') {
       return layoutDefault
     }
     return layoutDefault
+  })
+
+  onMounted(() => {
+    const data = localStorage.getItem('todos')
+    if (data) {
+      store.notesList = JSON.parse(data)
+    }
   })
 </script>
 <style scoped>

@@ -87,13 +87,6 @@
     store.notesList[i].checked = !result
     store.setLocalStorage()
   }
-
-  onMounted(() => {
-    const data = localStorage.getItem('todos')
-    if (data) {
-      store.notesList = JSON.parse(data)
-    }
-  })
 </script>
 
 <style scoped>
