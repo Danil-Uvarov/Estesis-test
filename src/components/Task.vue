@@ -1,8 +1,6 @@
 <template>
   <div v-for="(task, index) in tasks" :key="index" class="task">
-    <button class="task__modify" @click="openModal(index)">
-      modify name task
-    </button>
+    <UiModifyButton @edit="openModal(index)" />
     <input
       v-model="task.checked"
       type="checkbox"
@@ -12,11 +10,8 @@
 
     <div class="task__name">
       {{ task.nameTask }}
-      <red-cross
-        style="position: absolute; top: 0; right: 0"
-        @flick="deleteTask"
-      ></red-cross>
     </div>
+    <red-cross @click="saveNumber(index)"></red-cross>
   </div>
   <WindowWarning v-if="openWindow" @changes="deleteTask"
     >To delete the task?
@@ -26,14 +21,15 @@
 </template>
 
 <script setup lang="ts">
-  import { useNotesStore } from '../store'
+  import { useNotesStore } from '@/store/Index.ts'
   import { storeToRefs } from 'pinia'
   import { useRoute } from 'vue-router'
-  import { ITasks } from '../models/entyties/ITasks'
+  import { ITasks } from '@/models/entyties/ITasks.ts'
   import { ref } from 'vue'
-  import ModalTaskRefactor from './ModalTaskRefactor.vue'
-  import WindowWarning from './ui/WindowWarning.vue'
-  import RedCross from './ui/RedCross.vue'
+  import ModalTaskRefactor from '@/components/ModalTaskRefactor.vue'
+  import WindowWarning from '@/components/ui/WindowWarning.vue'
+  import RedCross from '@/components/ui/RedCross.vue'
+  import UiModifyButton from '@/components/ui/ModifyButton.vue'
 
   const props = defineProps<{ tasks: ITasks[] }>()
   const store = useNotesStore()
@@ -42,16 +38,20 @@
   const routeNumber = Number(route.params.id)
   const open = ref<boolean>(false)
   const openWindow = ref<boolean>(false)
+  const taskIdDelete = ref<number>(0)
+  const saveNumber = (index: number) => {
+    openWindow.value = !openWindow.value
+    taskIdDelete.value = index
+  }
   const modifyTask = ref<{ name: string; index: number }>({
     name: '',
     index: 0,
   })
-  const taskIdDelete = ref<number>(0)
 
   const deleteTask = (result?: boolean) => {
     openWindow.value = !openWindow.value
     if (result) {
-      notesList.value[routeNumber].tasks.splice(taskIdDelete, 1)
+      notesList.value[routeNumber].tasks.splice(taskIdDelete.value, 1)
     }
   }
   const close = (newName?: string) => {
@@ -73,16 +73,20 @@
 </script>
 <style scoped>
   .task {
-    padding: 0 20px;
     position: relative;
+    padding: 5px;
     margin: 20px;
     width: 100%;
-    display: grid;
-    grid-template-columns: 20% 20% 50%;
+    height: 100%;
+    display: flex;
+    gap: 12px;
+    border: 2px solid #000000;
+    border-radius: 8px;
   }
 
   .task__name {
-    position: relative;
+    max-width: 340px;
+    height: 100%;
     font-weight: 500;
     font-size: 24px;
     margin: auto 0;
@@ -93,18 +97,7 @@
     cursor: pointer;
     width: 40px;
     height: 40px;
-    margin: auto auto;
-  }
-
-  .task__modify {
-    cursor: pointer;
-    max-height: 50px;
-    max-width: 60px;
+    min-width: 40px;
     margin: auto 0;
-    padding: 2px;
-    background: gold;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 600;
   }
 </style>

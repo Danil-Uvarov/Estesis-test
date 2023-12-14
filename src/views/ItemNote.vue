@@ -5,17 +5,15 @@
         <img src="/public/image/arrow.svg" class="note__arrow" alt="#"
       /></router-link>
       <div class="note__buttons-history">
-        <button class="button__history" @click="undo">undo</button>
-        <button class="button__history" @click="redo">redo</button>
+        <UiButton @edit="undo">undo</UiButton>
+        <UiButton @edit="redo">redo</UiButton>
       </div>
     </div>
     <div class="note__title-wrapper">
       <h2 class="note__title" :class="{ open: isOpen }">
         {{ note.name }}
       </h2>
-      <button class="note__modify" @click="isOpen = !isOpen">
-        modify note
-      </button>
+      <UiModifyButton @edit="isOpen = !isOpen" />
     </div>
     <input
       v-model="note.name"
@@ -23,15 +21,11 @@
       :class="{ isOpen: isOpen }"
       type="text"
     />
-    <ModifyTask :tasks="note.tasks"></ModifyTask>
+    <Task :tasks="note.tasks"></Task>
 
     <div class="note__buttons-wrapper">
-      <button class="note__changes" @click="warning = !warning">
-        add changes
-      </button>
-      <button class="add__task-button" @click="isActive = !isActive">
-        add task
-      </button>
+      <UiButton @edit="warning = !warning">add changes</UiButton>
+      <UiButton @edit="isActive = !isActive">add task</UiButton>
       <AddTaskModal v-if="isActive" @close="newTask"></AddTaskModal>
     </div>
   </div>
@@ -40,15 +34,18 @@
   </WindowWarning>
 </template>
 <script setup lang="ts">
-  import ModifyTask from '../components/ModifyTask.vue'
-  import AddTaskModal from '../components/AddTaskModal.vue'
-  import WindowWarning from '../components/ui/WindowWarning.vue'
+  import Task from '@/components/Task.vue'
+  import AddTaskModal from '@/components/AddTaskModal.vue'
+  import WindowWarning from '@/components/ui/WindowWarning.vue'
+  import UiModifyButton from '@/components/ui/ModifyButton.vue'
+  import UiButton from '@/components/ui/UiButton.vue'
+  import { ITasks } from '@/models/entyties/ITasks.ts'
   import { useRouter } from 'vue-router'
-  import { useNotesStore } from '../store'
+  import { useNotesStore } from '@/store/Index.ts'
   import { storeToRefs } from 'pinia'
   import { useRoute } from 'vue-router'
-  import { ref, computed } from 'vue'
-  import { useRefHistory } from '@vueuse/core'
+  import { ref, computed, watchEffect } from 'vue'
+  import { useRefHistory, useMagicKeys } from '@vueuse/core'
 
   const router = useRouter()
   const store = useNotesStore()
@@ -58,6 +55,7 @@
   const isActive = ref<boolean>(false)
   const isOpen = ref<boolean>(false)
   const warning = ref<boolean>(false)
+  const { z, я, м, control, v } = useMagicKeys()
 
   const note = computed({
     get() {
@@ -70,12 +68,20 @@
   const { undo, redo } = useRefHistory(notesList, {
     deep: true,
   })
+  watchEffect(() => {
+    if (control.value && (z.value || я.value)) {
+      undo()
+    } else if (control.value && (v.value || м.value)) {
+      redo()
+    }
+  })
+
   const addChanges = (result?: boolean) => {
     if (result) {
-      const result = notesList.value[routeNumber].tasks.find(
-        (item) => !item.checked,
+      const data = notesList.value[routeNumber].tasks.find(
+        (item: ITasks) => !item.checked,
       )
-      store.notesList[routeNumber].checked = !result
+      store.notesList[routeNumber].checked = !data
       store.setLocalStorage()
       router.push('/')
     } else {
@@ -95,32 +101,26 @@
 </script>
 <style scoped>
   .body {
-    position: relative;
     display: flex;
     flex-direction: column;
     gap: 40px;
+    height: 100%;
   }
+
   .note__header {
     width: 100%;
     display: flex;
     justify-content: space-around;
   }
+
   .note__arrow {
     max-width: 40px;
     max-height: 20px;
   }
+
   .note__buttons-history {
     display: flex;
     gap: 20px;
-  }
-
-  .button__history {
-    padding: 8px;
-    background: #9395d3;
-    color: #ffffff;
-    border-radius: 6px;
-    font-size: 18px;
-    font-weight: 600;
   }
 
   .note__title-wrapper {
@@ -135,6 +135,7 @@
     font-weight: 600;
     max-width: 400px;
     word-break: break-word;
+    padding-bottom: 10px;
   }
 
   .note__title-input {
@@ -153,38 +154,6 @@
     gap: 40px;
     width: 100%;
     justify-content: space-between;
-  }
-
-  .note__modify {
-    cursor: pointer;
-    padding: 5px;
-    margin: 10px auto 0 auto;
-    background: gold;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .add__task-button {
-    cursor: pointer;
-    margin: 0 auto;
-    background: #9395d3;
-    color: #ffffff;
-    border-radius: 10px;
-    padding: 8px 12px;
-    font-size: 24px;
-    font-weight: 500;
-  }
-
-  .note__changes {
-    cursor: pointer;
-    margin: 0 auto;
-    background: #9395d3;
-    color: #ffffff;
-    border-radius: 10px;
-    padding: 8px 12px;
-    font-size: 24px;
-    font-weight: 500;
   }
 
   .isOpen {

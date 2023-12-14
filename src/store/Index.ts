@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { INote } from '../models/entyties/INote.ts'
+import { INote } from '@/models/entyties/INote.ts'
 
 interface notesState {
   notesList: INote[]

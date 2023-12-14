@@ -1,68 +1,68 @@
 <template>
-  <div class="note">
-    <router-link to="/">
-      <img src="/public/image/arrow.svg" class="note__arrow" alt="#"
-    /></router-link>
-    <div class="note__body">
-      <div class="note__wrapper">
-        <label v-if="openNote" class="note__name-label">
+  <div class='note'>
+    <router-link to='/'>
+      <img src='/public/image/arrow.svg' class='note__arrow' alt='#'
+      /></router-link>
+    <div class='note__body'>
+      <div class='note__wrapper'>
+        <label v-if='openNote' class='note__name-label'>
           note:
           <input
-            v-if="openNote"
-            v-model="inputNote"
-            class="note-input"
-            type="text"
-            :placeholder="placeholderNote"
+            v-if='openNote'
+            v-model='inputNote'
+            class='note-input'
+            type='text'
+            :placeholder='placeholderNote'
           />
         </label>
-        <button v-if="openNote" class="note__add-button" @click="addNote">
+        <button v-if='openNote' class='note__add-button' @click='addNote'>
           post a note
         </button>
-        <ul class="note__name-list">
-          <li v-if="note.name" class="note__name-link">
+        <ul class='note__name-list'>
+          <li v-if='note.name' class='note__name-link'>
             note: {{ note.name }}
           </li>
         </ul>
-        <red-cross v-if="!openNote" @flick="eraseNote"></red-cross>
+        <red-cross v-if='!openNote' @close='eraseNote'></red-cross>
       </div>
-      <div class="task__wrapper">
-        <label class="task__name-label">
+      <div class='task__wrapper'>
+        <label class='task__name-label'>
           task
           <input
-            v-model="inputTask"
-            class="task-input"
-            type="text"
-            placeholder="enter a task"
+            v-model='inputTask'
+            class='task-input'
+            type='text'
+            placeholder='enter a task'
           />
         </label>
-        <button class="task__add-button" @click="addTask">add task</button>
-        <ol class="task__name-list">
+        <button class='task__add-button' @click='addTask'>add task</button>
+        <ol class='task__name-list'>
           <li
-            v-for="(task, index) in note.tasks"
-            :key="index"
-            class="task__name-link"
+            v-for='(task, index) in note.tasks'
+            :key='index'
+            class='task__name-link'
           >
             task - {{ task.nameTask }}
           </li>
         </ol>
       </div>
-      <div class="buttons__wrapper">
-        <RouterLink to="/">
-          <button class="button__add" @click="pushNoteStore(note)">
+      <div class='buttons__wrapper'>
+        <RouterLink to='/'>
+          <button class='button__add' @click='pushNoteStore(note)'>
             add note
           </button>
         </RouterLink>
-        <button class="button__clear" @click="clear">reset</button>
+        <button class='button__clear' @click='clear'>reset</button>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-  import { INote } from '../models/entyties/INote'
+<script setup lang='ts'>
+  import { INote } from '@/models/entyties/INote'
   import { ref } from 'vue'
-  import { useNotesStore } from '../store'
-  import RedCross from '../components/ui/RedCross.vue'
+  import { useNotesStore } from '@/store/Index.ts'
+  import RedCross from '@/components/ui/RedCross.vue'
 
   const notesStore = useNotesStore()
   const inputNote = ref<string>('')
@@ -71,7 +71,7 @@
   const note = ref<INote>({
     name: '',
     checked: false,
-    tasks: [],
+    tasks: []
   })
 
   const placeholderNote = ref('enter a note')
@@ -81,6 +81,7 @@
     inputNote.value = ''
     openNote.value = !openNote.value
   }
+
   function addNote() {
     if (!inputNote.value) {
       return
@@ -110,12 +111,11 @@
 </script>
 
 <style scoped>
-  .note {
-  }
   .note__arrow {
     max-width: 40px;
     max-height: 20px;
   }
+
   .note__body {
     display: flex;
     flex-direction: column;
@@ -152,9 +152,6 @@
     border-radius: 4px;
     padding: 5px;
     border: none;
-  }
-
-  .task__wrapper {
   }
 
   .task__name-label {
@@ -201,5 +198,3 @@
     border-radius: 4px;
     border: none;
   }
-</style>
-../models/entyties/notesList

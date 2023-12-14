@@ -1,20 +1,13 @@
 <template>
   <div class="add__task-frame">
     <div class="frame__wrapper">
-      <h2 class="frame__wrapper-title">Add Task</h2>
+      <h2 class="frame__wrapper-title"></h2>
       <div class="input__container">
-        <input
-          v-model="newName"
-          class="frame__wrapper-input"
-          type="text"
-          name="name"
-        />
-        <button class="input__button" @click="openWindow = !openWindow">
-          add
-        </button>
+        <UiInput @change-value="changeNewName">Add Task</UiInput>
+        <UiButton @click="openWindow = !openWindow">Add</UiButton>
       </div>
     </div>
-    <RedCross @flick="close"></RedCross>
+    <RedCross @close="close"></RedCross>
     <warning-window v-if="openWindow" @changes="close"
       >Put a new task on the list?</warning-window
     >
@@ -23,13 +16,19 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import WarningWindow from './ui/WindowWarning.vue'
-  import RedCross from './ui/RedCross.vue'
+  import WarningWindow from '@/components/ui/WindowWarning.vue'
+  import RedCross from '@/components/ui/RedCross.vue'
+  import UiInput from '@/components/ui/UiInput.vue'
+  import UiButton from '@/components/ui/ModalButton.vue'
 
   const emit = defineEmits<{ close: [newName?: string] }>()
 
   const newName = ref<string>('')
   const openWindow = ref<boolean>(false)
+
+  const changeNewName = (value: string) => {
+    newName.value = value
+  }
   const close = (result?: boolean) => {
     openWindow.value = !openWindow.value
     if (result) {
@@ -68,20 +67,5 @@
     display: flex;
     flex-direction: column;
     margin-top: 30px;
-  }
-
-  .frame__wrapper-input {
-    padding: 10px 30px;
-    border-radius: 10px;
-  }
-
-  .input__button {
-    margin-top: 40px;
-    padding: 10px;
-    background: #9395d3;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 32px;
-    border-radius: 10px;
   }
 </style>

@@ -8,8 +8,8 @@
 <script setup lang="ts">
   import { computed, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
-  import layoutDefault from './layouts/layouDefault.vue'
-  import { useNotesStore } from './store'
+  import layoutDefault from '@/layouts/layouDefault.vue'
+  import { useNotesStore } from '@/store/Index.ts'
 
   const route = useRoute()
   const store = useNotesStore()
@@ -36,5 +36,6 @@
     height: 100%;
     background-color: #b0c4de;
     border-radius: 20px;
+    position: relative;
   }
 </style>

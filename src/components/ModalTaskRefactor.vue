@@ -1,6 +1,6 @@
 <template>
   <div class="modal__task-body">
-    <red-cross @flick="$emit('close')"></red-cross>
+    <red-cross @close="$emit('close')"></red-cross>
     <div class="modal__task-name">{{ name }}</div>
     <input v-model="name" type="text" class="task__modify-input" />
     <button class="modal__button-changes" @click="show = !show">
@@ -14,14 +14,14 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import WindowWarning from './ui//WindowWarning.vue'
-  import RedCross from './ui/RedCross.vue'
+  import WindowWarning from '@/components/ui//WindowWarning.vue'
+  import RedCross from '@/components/ui/RedCross.vue'
 
-  interface props {
+  interface IProps {
     nameTask: string
   }
 
-  const props = defineProps<props>()
+  const props = defineProps<IProps>()
   const emit = defineEmits<{ close: [task?: string] }>()
 
   const name = ref<string>(props.nameTask)

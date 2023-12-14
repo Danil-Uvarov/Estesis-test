@@ -1,9 +1,9 @@
 <template>
-  <router-link to="/addNote">
-    <div class="add-note-button-wrapper">
+  <div class="add-note-button-wrapper">
+    <router-link to="/addNote">
       <button class="add-button" />
-    </div>
-  </router-link>
+    </router-link>
+  </div>
 </template>
 
 <script setup lang="ts"></script>
@@ -16,6 +16,7 @@
     justify-content: center;
   }
   .add-button {
+    cursor: pointer;
     position: relative;
     padding: 40px;
     border-radius: 100%;

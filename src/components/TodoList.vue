@@ -29,21 +29,19 @@
           class="note__tasks-list"
         >
           <li class="note__task">
-            <label class="task__label-checkbox">
-              <input
-                v-model="task.checked"
-                disabled="disabled"
-                class="task__checkbox"
-                type="checkbox"
-                @update:model-value="tasksAccomplished(index)"
-              />
-              <span class="task__checked-custom" />
-              <span class="task__name">{{ task.nameTask }}</span>
-            </label>
+            <input
+              v-model="task.checked"
+              disabled="disabled"
+              class="task__checkbox"
+              type="checkbox"
+              @update:model-value="tasksAccomplished(index)"
+            />
+            <span class="task__checked-custom" />
+            <span class="task__name">{{ task.nameTask }}</span>
           </li>
         </ul>
       </div>
-      <red-cross @flick="window(index)"></red-cross>
+      <red-cross @close="window(index)"></red-cross>
     </div>
     <WindowWarning v-if="showWindow" @changes="deleteNote"
       >To delete the note?
@@ -53,15 +51,13 @@
 
 <script setup lang="ts">
   import { storeToRefs } from 'pinia'
-  import { useNotesStore } from '../store'
-  import { useRouter } from 'vue-router'
-  import { onMounted, ref } from 'vue'
-  import WindowWarning from './ui/WindowWarning.vue'
-  import RedCross from './ui/RedCross.vue'
+  import { useNotesStore } from '@/store/Index.ts'
+  import { ref } from 'vue'
+  import WindowWarning from '@/components/ui/WindowWarning.vue'
+  import RedCross from '@/components//ui/RedCross.vue'
+  import { ITasks } from '@/models/entyties/ITasks.ts'
 
-  const router = useRouter()
   const store = useNotesStore()
-
   const { notesList } = storeToRefs(store)
   const showWindow = ref<boolean>(false)
   const deleteID = ref<number>(0)
@@ -77,13 +73,15 @@
     }
   }
   const noteInput = (i: number) => {
-    store.notesList[i].tasks.forEach((task) => {
+    store.notesList[i].tasks.forEach((task: ITasks) => {
       task.checked = store.notesList[i].checked
     })
     store.setLocalStorage()
   }
   const tasksAccomplished = (i: number) => {
-    const result = notesList.value[i].tasks.find((item) => !item.checked)
+    const result = notesList.value[i].tasks.find(
+      (item: ITasks) => !item.checked,
+    )
     store.notesList[i].checked = !result
     store.setLocalStorage()
   }
@@ -157,7 +155,6 @@
     color: #000000;
     font-weight: 700;
     font-size: 18px;
-    height: 100%;
     cursor: pointer;
     text-decoration: none;
     word-break: break-word;
@@ -166,29 +163,21 @@
   .note__tasks-wrapper {
     display: flex;
     flex-direction: column;
+    gap: 6px;
   }
 
   .note__tasks-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
   }
 
   .note__task {
     list-style: none;
     font-size: 24px;
     display: flex;
-    justify-content: center;
+
     gap: 8px;
     word-break: break-word;
-  }
-
-  .task__label-checkbox {
-    display: flex;
-    max-width: 200px;
-    width: 100%;
-    justify-content: space-between;
-    background-color: #ffffff;
   }
 
   .task__checkbox {

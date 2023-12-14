@@ -1,5 +1,5 @@
 <template>
-  <div class="mainVuews">
+  <div class="mainViews">
     <app-bar />
     <todo-list />
     <add-note-button />
@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="ts">
-  import AddNoteButton from '../components/AddNoteButton.vue'
-  import AppBar from '../components/AppBar.vue'
-  import TodoList from '../components/TodoList.vue'
+  import AddNoteButton from '@/components/AddNoteButton.vue'
+  import AppBar from '@/components/AppBar.vue'
+  import TodoList from '@/components/TodoList.vue'
 </script>
 
 <style scoped></style>
