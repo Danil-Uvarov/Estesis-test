@@ -8,8 +8,8 @@
   .btn {
     font-weight: 500;
     font-size: 18px;
-    padding: 20px 0 20px 0;
     margin-top: 40px;
+    padding: 10px;
     color: #fff;
     transition: all 0.5s;
     position: relative;

@@ -2,10 +2,8 @@
   <div class="modal__task-body">
     <red-cross @close="$emit('close')"></red-cross>
     <div class="modal__task-name">{{ name }}</div>
-    <input v-model="name" type="text" class="task__modify-input" />
-    <button class="modal__button-changes" @click="show = !show">
-      make changes
-    </button>
+    <ui-input @change-value="changeName"></ui-input>
+    <modal-button @click="show = !show"> make changes </modal-button>
     <WindowWarning v-if="show" @changes="getChanges"
       >Make changes to the task?</WindowWarning
     >
@@ -16,6 +14,8 @@
   import { ref } from 'vue'
   import WindowWarning from '@/components/ui//WindowWarning.vue'
   import RedCross from '@/components/ui/RedCross.vue'
+  import UiInput from '@/components/ui/UiInput.vue'
+  import ModalButton from '@/components/ui/ModalButton.vue'
 
   interface IProps {
     nameTask: string
@@ -27,6 +27,9 @@
   const name = ref<string>(props.nameTask)
   const show = ref<boolean>(false)
 
+  const changeName = (inputValue: string) => {
+    name.value = inputValue
+  }
   const getChanges = (result?: boolean) => {
     if (result) {
       emit('close', name.value)
@@ -38,7 +41,9 @@
 <style scoped>
   .modal__task-body {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
     position: absolute;
     left: 0;
     top: 0;
@@ -51,27 +56,5 @@
   .modal__task-name {
     font-weight: 700;
     font-size: 32px;
-  }
-  .task__modify-input {
-    display: block;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 50px;
-    padding: 10px 30px;
-    border-radius: 20px;
-    z-index: 60;
-  }
-  .modal__button-changes {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 150px;
-    padding: 10px;
-    background: #9395d3;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 32px;
-    border-radius: 10px;
   }
 </style>
