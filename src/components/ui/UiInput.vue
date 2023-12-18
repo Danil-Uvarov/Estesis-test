@@ -1,25 +1,26 @@
 <template>
   <div class="form__input-wrapper">
-    <input
-      id="text"
-      v-model="valueInput"
-      class="form__input"
-      placeholder=" "
-      @update:model-value="changeInput"
-    />
+    <input id="text" v-model="value" class="form__input" placeholder=" " />
     <label for="text" class="form__label"><slot /></label>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { computed } from 'vue'
 
-  const emit = defineEmits<{ changeValue: [valueInput: string] }>()
-  const valueInput = ref<string>('')
+  const emit = defineEmits(['update:modelValue'])
+  const props = defineProps<{
+    modelValue: string
+  }>()
 
-  const changeInput = () => {
-    emit('changeValue', valueInput.value)
-  }
+  const value = computed({
+    get() {
+      return props.modelValue
+    },
+    set(value) {
+      emit('update:modelValue', value)
+    },
+  })
 </script>
 <style scoped>
   .form__input-wrapper {

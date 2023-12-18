@@ -2,7 +2,7 @@
   <div class="modal__task-body">
     <red-cross @close="$emit('close')"></red-cross>
     <div class="modal__task-name">{{ name }}</div>
-    <ui-input @change-value="changeName"></ui-input>
+    <ui-input v-model="name"></ui-input>
     <modal-button @click="show = !show"> make changes </modal-button>
     <WindowWarning v-if="show" @changes="getChanges"
       >Make changes to the task?</WindowWarning
@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import WindowWarning from '@/components/ui//WindowWarning.vue'
   import RedCross from '@/components/ui/RedCross.vue'
   import UiInput from '@/components/ui/UiInput.vue'
@@ -27,9 +27,6 @@
   const name = ref<string>(props.nameTask)
   const show = ref<boolean>(false)
 
-  const changeName = (inputValue: string) => {
-    name.value = inputValue
-  }
   const getChanges = (result?: boolean) => {
     if (result) {
       emit('close', name.value)
@@ -37,6 +34,9 @@
       emit('close')
     }
   }
+  onMounted(() => {
+    return window.scrollTo(0, 0)
+  })
 </script>
 <style scoped>
   .modal__task-body {

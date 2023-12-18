@@ -3,7 +3,7 @@
     <div class="frame__wrapper">
       <h2 class="frame__wrapper-title"></h2>
       <div class="input__container">
-        <UiInput @change-value="changeNewName">Add Task</UiInput>
+        <UiInput v-model="newName">Add Task</UiInput>
         <UiButton @click="openWindow = !openWindow">Add</UiButton>
       </div>
     </div>
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import WarningWindow from '@/components/ui/WindowWarning.vue'
   import RedCross from '@/components/ui/RedCross.vue'
   import UiInput from '@/components/ui/UiInput.vue'
@@ -26,9 +26,6 @@
   const newName = ref<string>('')
   const openWindow = ref<boolean>(false)
 
-  const changeNewName = (value: string) => {
-    newName.value = value
-  }
   const close = (result?: boolean) => {
     openWindow.value = !openWindow.value
     if (result) {
@@ -37,6 +34,9 @@
       emit('close')
     }
   }
+  onMounted(() => {
+    return window.scrollTo(0, 0)
+  })
 </script>
 <style scoped>
   .add__task-frame {

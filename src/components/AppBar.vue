@@ -1,12 +1,18 @@
 <template>
   <header class="appBar-header">
     <h1 class="appBar__title">Todo list</h1>
-    <div class="todos__quantity">10</div>
+    <div class="todos__quantity">Notes : {{ notesList.length }}</div>
     <div class="todos__line" />
   </header>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { useNotesStore } from '@/store/Index.ts'
+  import { storeToRefs } from 'pinia'
+
+  const store = useNotesStore()
+  const { notesList } = storeToRefs(store)
+</script>
 
 <style scoped>
   .appBar-header {

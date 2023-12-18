@@ -1,13 +1,11 @@
 <template>
-  <div v-for="(task, index) in tasks" :key="index" class="task">
+  <div
+    v-for="(task, index) in notesList[routeNumber].tasks"
+    :key="index"
+    class="task"
+  >
     <UiModifyButton @edit="openModal(index)" />
-    <input
-      v-model="task.checked"
-      type="checkbox"
-      class="task__checkbox"
-      @update:model-value="tasksAccomplished(index)"
-    />
-
+    <CheckboxTask v-model:checked="task.checked"></CheckboxTask>
     <div class="task__name">
       {{ task.nameTask }}
     </div>
@@ -24,14 +22,13 @@
   import { useNotesStore } from '@/store/Index.ts'
   import { storeToRefs } from 'pinia'
   import { useRoute } from 'vue-router'
-  import { ITasks } from '@/models/entyties/ITasks.ts'
   import { ref } from 'vue'
   import ModalTaskRefactor from '@/components/ModalTaskRefactor.vue'
   import WindowWarning from '@/components/ui/WindowWarning.vue'
   import RedCross from '@/components/ui/RedCross.vue'
   import UiModifyButton from '@/components/ui/ModifyButton.vue'
+  import CheckboxTask from '@/components/ui/CheckboxTask.vue'
 
-  const props = defineProps<{ tasks: ITasks[] }>()
   const store = useNotesStore()
   const route = useRoute()
   const { notesList } = storeToRefs(store)
@@ -65,10 +62,6 @@
     open.value = !open.value
     modifyTask.value.name = notesList.value[routeNumber].tasks[i].nameTask
     modifyTask.value.index = i
-  }
-  const tasksAccomplished = (i: number) => {
-    const result = props.tasks.find((item) => !item.checked)
-    store.notesList[i].checked = !result
   }
 </script>
 <style scoped>
