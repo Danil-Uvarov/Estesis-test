@@ -10,9 +10,14 @@
 </template>
 
 <script setup lang="ts">
+  import { onMounted } from 'vue'
+
   defineEmits<{
     changes: [result?: boolean]
   }>()
+  onMounted(() => {
+    return window.scrollTo(0, 30)
+  })
 </script>
 
 <style scoped>
